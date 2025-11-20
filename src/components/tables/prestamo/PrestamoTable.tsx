@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
     Table,
     TableBody,
@@ -10,28 +9,13 @@ import Button from "../../ui/button/Button";
 import Badge from "../../ui/badge/Badge";
 import { TbReportMoney } from "react-icons/tb";
 import { Prestamo } from "../../../types/prestamo";
-import PlanPagosModal from "../../modals/planPago/PlanPagosModal";
 
 type Props = {
     prestamos: Prestamo[];
+    onOpenPlanPagos: (prestamoId: number, clienteNombre: string) => void;
 }
 
-export default function PrestamoTable({ prestamos }: Props) {
-    const [selectedPrestamoId, setSelectedPrestamoId] = useState<number | null>(null);
-    const [selectedClienteNombre, setSelectedClienteNombre] = useState<string>("");
-    const [isPlanPagosModalOpen, setIsPlanPagosModalOpen] = useState(false);
-
-    const handleOpenPlanPagos = (prestamo: Prestamo) => {
-        setSelectedPrestamoId(prestamo.id);
-        setSelectedClienteNombre(prestamo.cliente_nombre);
-        setIsPlanPagosModalOpen(true);
-    };
-
-    const handleClosePlanPagos = () => {
-        setIsPlanPagosModalOpen(false);
-        setSelectedPrestamoId(null);
-        setSelectedClienteNombre("");
-    };
+export default function PrestamoTable({ prestamos, onOpenPlanPagos }: Props) {
     return (
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
             <div className="max-w-full overflow-x-auto">
@@ -91,7 +75,7 @@ export default function PrestamoTable({ prestamos }: Props) {
                                         size="md"
                                         endIcon={<TbReportMoney className="size-5" />}
                                         title="Ver Plan de Pagos"
-                                        onClick={() => handleOpenPlanPagos(prestamo)}
+                                        onClick={() => onOpenPlanPagos(prestamo.id, prestamo.cliente_nombre)}
                                     >
                                         {" "}
                                     </Button>
@@ -101,14 +85,6 @@ export default function PrestamoTable({ prestamos }: Props) {
                     </TableBody>
                 </Table>
             </div>
-
-            {/* Modal de Plan de Pagos */}
-            <PlanPagosModal
-                isOpen={isPlanPagosModalOpen}
-                onClose={handleClosePlanPagos}
-                prestamoId={selectedPrestamoId}
-                clienteNombre={selectedClienteNombre}
-            />
         </div>
     );
 }

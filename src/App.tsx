@@ -41,9 +41,7 @@ export default function App() {
           <Route
             element={
               <ProtectedRoute>
-                <RoleProtectedRoute allowedRoles={['Administrador', 'Asesor']}>
-                  <AppLayout />
-                </RoleProtectedRoute>
+                <AppLayout />
               </ProtectedRoute>
             }>
             <Route index path="/" element={<Home />} />

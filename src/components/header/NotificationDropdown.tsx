@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useNotificaciones } from "../../hooks/planPago/useNotificaciones";
 
 export default function NotificationDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const { notificaciones, loading, hasNewNotifications, markAsRead } = useNotificaciones();
+  const navigate = useNavigate();
 
   function toggleDropdown() {
     setIsOpen(!isOpen);
@@ -21,6 +22,11 @@ export default function NotificationDropdown() {
     if (hasNewNotifications) {
       markAsRead();
     }
+  };
+
+  const handleNotificationClick = (prestamoId: number, clienteNombre: string) => {
+    closeDropdown();
+    navigate(`/prestamos?prestamoId=${prestamoId}&clienteNombre=${encodeURIComponent(clienteNombre)}`);
   };
   return (
     <div className="relative">
@@ -92,9 +98,8 @@ export default function NotificationDropdown() {
             notificaciones.map((notificacion) => (
               <li key={notificacion.id_plan_pago}>
                 <DropdownItem
-                  onItemClick={closeDropdown}
-                  to={`/prestamos/${notificacion.id_prestamo}`}
-                  className="flex gap-3 rounded-lg border-b border-gray-100 p-3 px-4.5 py-3 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-white/5"
+                  onItemClick={() => handleNotificationClick(notificacion.id_prestamo, notificacion.nombre_cliente)}
+                  className="flex gap-3 rounded-lg border-b border-gray-100 p-3 px-4.5 py-3 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-white/5 cursor-pointer"
                 >
                   <span className="relative block w-full h-10 rounded-full z-1 max-w-10">
                     <span className="flex items-center justify-center w-10 h-10 text-white bg-orange-500 rounded-full">

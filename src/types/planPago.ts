@@ -23,6 +23,7 @@ export interface NotificacionPlanPago {
     id_plan_pago: number;
     id_prestamo: number;
     nombre_cliente: string;
+    estado: 'Pendiente' | 'Vencida';
     mensaje: string;
 }
 

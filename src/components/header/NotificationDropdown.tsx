@@ -35,11 +35,11 @@ export default function NotificationDropdown() {
         onClick={handleClick}
       >
         <span
-          className={`absolute right-0 top-0.5 z-10 h-2 w-2 rounded-full bg-orange-400 ${
+          className={`absolute right-0 top-0.5 z-10 h-2 w-2 rounded-full bg-cyan-400 ${
             !hasNewNotifications || notificaciones.length === 0 ? "hidden" : "flex"
           }`}
         >
-          <span className="absolute inline-flex w-full h-full bg-orange-400 rounded-full opacity-75 animate-ping"></span>
+          <span className="absolute inline-flex w-full h-full bg-cyan-400 rounded-full opacity-75 animate-ping"></span>
         </span>
         <svg
           className="fill-current"
@@ -95,52 +95,59 @@ export default function NotificationDropdown() {
               <span className="text-gray-500 dark:text-gray-400">No hay notificaciones pendientes</span>
             </li>
           ) : (
-            notificaciones.map((notificacion) => (
-              <li key={notificacion.id_plan_pago}>
-                <DropdownItem
-                  onItemClick={() => handleNotificationClick(notificacion.id_prestamo, notificacion.nombre_cliente)}
-                  className="flex gap-3 rounded-lg border-b border-gray-100 p-3 px-4.5 py-3 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-white/5 cursor-pointer"
-                >
-                  <span className="relative block w-full h-10 rounded-full z-1 max-w-10">
-                    <span className="flex items-center justify-center w-10 h-10 text-white bg-orange-500 rounded-full">
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 20 20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                          d="M10 2C10.4142 2 10.75 2.33579 10.75 2.75V3.84459C13.5913 4.19219 15.8078 6.59292 15.8078 9.5V13.5H16.25C16.6642 13.5 17 13.8358 17 14.25C17 14.6642 16.6642 15 16.25 15H3.75C3.33579 15 3 14.6642 3 14.25C3 13.8358 3.33579 13.5 3.75 13.5H4.19224V9.5C4.19224 6.59292 6.40867 4.19219 9.25 3.84459V2.75C9.25 2.33579 9.58579 2 10 2ZM5.69224 13.5H14.3078V9.5C14.3078 7.10418 12.3958 5.19224 10 5.19224C7.60418 5.19224 5.69224 7.10418 5.69224 9.5V13.5ZM8.25 16C8.25 15.5858 8.58579 15.25 9 15.25H11C11.4142 15.25 11.75 15.5858 11.75 16C11.75 16.4142 11.4142 16.75 11 16.75H9C8.58579 16.75 8.25 16.4142 8.25 16Z"
-                          fill="currentColor"
-                        />
-                      </svg>
+            notificaciones.map((notificacion) => {
+              const esVencida = notificacion.estado === 'Vencida';
+              const colorIcono = esVencida ? 'bg-red-500' : 'bg-orange-500';
+              const colorIndicador = esVencida ? 'bg-red-400' : 'bg-orange-400';
+              
+              return (
+                <li key={notificacion.id_plan_pago}>
+                  <DropdownItem
+                    onItemClick={() => handleNotificationClick(notificacion.id_prestamo, notificacion.nombre_cliente)}
+                    className="flex gap-3 rounded-lg border-b border-gray-100 p-3 px-4.5 py-3 hover:bg-gray-100 dark:border-gray-800 dark:hover:bg-white/5 cursor-pointer"
+                  >
+                    <span className="relative block w-full h-10 rounded-full z-1 max-w-10">
+                      <span className={`flex items-center justify-center w-10 h-10 text-white ${colorIcono} rounded-full`}>
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 20 20"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M10 2C10.4142 2 10.75 2.33579 10.75 2.75V3.84459C13.5913 4.19219 15.8078 6.59292 15.8078 9.5V13.5H16.25C16.6642 13.5 17 13.8358 17 14.25C17 14.6642 16.6642 15 16.25 15H3.75C3.33579 15 3 14.6642 3 14.25C3 13.8358 3.33579 13.5 3.75 13.5H4.19224V9.5C4.19224 6.59292 6.40867 4.19219 9.25 3.84459V2.75C9.25 2.33579 9.58579 2 10 2ZM5.69224 13.5H14.3078V9.5C14.3078 7.10418 12.3958 5.19224 10 5.19224C7.60418 5.19224 5.69224 7.10418 5.69224 9.5V13.5ZM8.25 16C8.25 15.5858 8.58579 15.25 9 15.25H11C11.4142 15.25 11.75 15.5858 11.75 16C11.75 16.4142 11.4142 16.75 11 16.75H9C8.58579 16.75 8.25 16.4142 8.25 16Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </span>
+                      <span className={`absolute bottom-0 right-0 z-10 h-2.5 w-full max-w-2.5 rounded-full border-[1.5px] border-white ${colorIndicador} dark:border-gray-900`}></span>
                     </span>
-                    <span className="absolute bottom-0 right-0 z-10 h-2.5 w-full max-w-2.5 rounded-full border-[1.5px] border-white bg-orange-400 dark:border-gray-900"></span>
-                  </span>
 
-                  <span className="block flex-1">
-                    <span className="mb-1.5 block text-theme-sm text-gray-700 dark:text-gray-300">
-                      <span className="font-medium text-gray-800 dark:text-white/90">
+                    <span className="block flex-1">
+                      {/* Título: Nombre del cliente */}
+                      <h6 className="mb-1 text-sm font-semibold text-gray-800 dark:text-white/90">
                         {notificacion.nombre_cliente}
-                      </span>
-                      <br />
-                      <span className="text-gray-600 dark:text-gray-400">
+                      </h6>
+                      
+                      {/* Cuerpo: Mensaje formateado desde el backend */}
+                      <p className="mb-2 text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
                         {notificacion.mensaje}
+                      </p>
+
+                      {/* Pie: Información del préstamo */}
+                      <span className="flex items-center gap-1.5 text-gray-500 text-theme-xs dark:text-gray-400">
+                        <span>Préstamo {notificacion.id_prestamo}</span>
+                        <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
+                        <span>Plan de Pago</span>
                       </span>
                     </span>
-
-                    <span className="flex items-center gap-2 text-gray-500 text-theme-xs dark:text-gray-400">
-                      <span>Plan de Pago</span>
-                      <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
-                      <span>Préstamo #{notificacion.id_prestamo}</span>
-                    </span>
-                  </span>
-                </DropdownItem>
-              </li>
-            ))
+                  </DropdownItem>
+                </li>
+              );
+            })
           )}
         </ul>
         {notificaciones.length > 0 && (

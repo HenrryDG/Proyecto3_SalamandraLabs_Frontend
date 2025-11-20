@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
 import PageMeta from "../../components/common/PageMeta";
 import PrestamoFilter from "../../components/filters/prestamo/PrestamoFilter";
@@ -8,10 +9,12 @@ import { usePrestamos } from "../../hooks/prestamo/usePrestamos";
 import exportPrestamosToExcel from "../../utils/exportPrestamos";
 import Button from "../../components/ui/button/Button";
 import { FileIcon } from "../../icons";
+import PlanPagosModal from "../../components/modals/planPago/PlanPagosModal";
 
 
 export default function SolicitudesPage() {
   const { prestamos, loading, error } = usePrestamos();
+  const [searchParams, setSearchParams] = useSearchParams();
 
 
 
@@ -21,6 +24,19 @@ export default function SolicitudesPage() {
 
   const [paginaActual, setPaginaActual] = useState(1);
   const elementosPorPagina = 6;
+
+  // Control del modal desde URL
+  const prestamoIdParam = searchParams.get('prestamoId');
+  const clienteNombreParam = searchParams.get('clienteNombre');
+  const isPlanPagosModalOpen = prestamoIdParam !== null;
+
+  const handleOpenPlanPagos = (prestamoId: number, clienteNombre: string) => {
+    setSearchParams({ prestamoId: prestamoId.toString(), clienteNombre });
+  };
+
+  const handleClosePlanPagos = () => {
+    setSearchParams({});
+  };
 
   // Filtrar solicitudes por texto y estado
   const prestamosFiltrados = (prestamos ?? []).filter((prestamo) =>
@@ -135,12 +151,23 @@ export default function SolicitudesPage() {
             <p className="text-center text-gray-500 dark:text-gray-400">No hay préstamos que coincidan con el filtro.</p>
           ) : (
             <>
-              <PrestamoTable prestamos={prestamosPaginados} />
+              <PrestamoTable 
+                prestamos={prestamosPaginados} 
+                onOpenPlanPagos={handleOpenPlanPagos}
+              />
               <Pagination paginaActual={paginaActual} totalPaginas={totalPaginas} onPrev={onPrev} onNext={onNext} />
             </>
           )}
         </div>
       </div>
+
+      {/* Modal de Plan de Pagos */}
+      <PlanPagosModal
+        isOpen={isPlanPagosModalOpen}
+        onClose={handleClosePlanPagos}
+        prestamoId={prestamoIdParam ? parseInt(prestamoIdParam) : null}
+        clienteNombre={clienteNombreParam || ""}
+      />
     </div>
   );
 }

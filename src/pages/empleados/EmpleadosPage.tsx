@@ -11,7 +11,6 @@ import { Pagination } from "../../components/tables/Pagination";
 import { Empleado } from "../../types/empleado";
 import Button from "../../components/ui/button/Button";
 import { FaPlus } from "react-icons/fa";
-import exportEmpleadosToExcel from "../../utils/exportEmpleados";
 
 export default function EmpleadosPage() {
   const { isOpen, openModal, closeModal } = useModal();
@@ -55,31 +54,6 @@ export default function EmpleadosPage() {
     setPaginaActual(1);
   }, [filtro, estado]);
 
-  // Estado para descarga
-  const [isDownloading, setIsDownloading] = useState(false);
-  // Alcance de la exportación: 'page' | 'filtrados' | 'todos'
-  const [exportScope, setExportScope] = useState<"page" | "filtrados" | "todos">("filtrados");
-
-  // Llamar al util para exportar según alcance seleccionado
-  const handleDownloadReport = async () => {
-    const dataToExport = exportScope === "page"
-      ? empleadosPaginados
-      : exportScope === "filtrados"
-        ? empleadosFiltrados
-        : empleados ?? [];
-
-    if (!dataToExport || dataToExport.length === 0) return;
-
-    try {
-      setIsDownloading(true);
-      await exportEmpleadosToExcel(dataToExport);
-    } catch (err) {
-      console.error("Error generando reporte empleados:", err);
-    } finally {
-      setIsDownloading(false);
-    }
-  };
-
   // Cambios de página
   const onPrev = () => setPaginaActual((p) => Math.max(p - 1, 1));
   const onNext = () => setPaginaActual((p) => Math.min(p + 1, totalPaginas));
@@ -98,36 +72,14 @@ export default function EmpleadosPage() {
           estado={estado}
           setEstado={setEstado}
           child={
-            <div className="flex items-center gap-3">
-              <select
-                value={exportScope}
-                onChange={(e) => setExportScope(e.target.value as any)}
-                className="h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
-                title="Alcance del reporte"
-              >
-                <option value="page">Página</option>
-                <option value="filtrados">Filtrados</option>
-                <option value="todos">Todos</option>
-              </select>
-
-              <Button
-                size="md"
-                variant="outline"
-                onClick={handleDownloadReport}
-                disabled={isDownloading}
-              >
-                {isDownloading ? "Generando..." : "Descargar Reporte"}
-              </Button>
-
-              <Button
-                size="md"
-                variant="primary"
-                onClick={openModal}
-              >
-                <FaPlus className="size-3" />
-                Nuevo Empleado
-              </Button>
-            </div>
+            <Button
+              size="md"
+              variant="primary"
+              onClick={openModal}
+            >
+              <FaPlus className="size-3" />
+              Nuevo Empleado
+            </Button>
           }
         />
         {/* === Tabla / estados === */}

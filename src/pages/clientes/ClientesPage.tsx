@@ -6,8 +6,6 @@ import { Pagination } from "../../components/tables/Pagination";
 import { useClientes } from "../../hooks/cliente/useClientes";
 import ClienteFilter from "../../components/filters/cliente/ClienteFilter";
 import Button from "../../components/ui/button/Button";
-import exportClientesToExcel from "../../utils/exportClientes";
-import { FileIcon } from "../../icons";
 import { FaPlus } from "react-icons/fa";
 import CreateClienteModal from "../../components/modals/cliente/CreateClienteModal";
 import { useModal } from "../../hooks/useModal";
@@ -57,32 +55,6 @@ export default function ClientesPage() {
     setPaginaActual(1);
   }, [filtro, estado]);
 
-  // Estado para descarga
-  const [isDownloading, setIsDownloading] = useState(false);
-  // Alcance de la exportación: 'page' | 'filtrados' | 'todos'
-  const [exportScope, setExportScope] = useState<"page" | "filtrados" | "todos">("filtrados");
-
-  // Llamar al util para generar y descargar el reporte con los clientes filtrados
-  const handleDownloadReport = async () => {
-    // Determinar datos según el alcance seleccionado
-    const dataToExport = exportScope === "page"
-      ? clientesPaginados
-      : exportScope === "filtrados"
-        ? clientesFiltrados
-        : clientes ?? [];
-
-    if (!dataToExport || dataToExport.length === 0) return;
-
-    try {
-      setIsDownloading(true);
-      await exportClientesToExcel(dataToExport);
-    } catch (err) {
-      console.error("Error generando reporte Excel:", err);
-    } finally {
-      setIsDownloading(false);
-    }
-  };
-
   // Cambios de página
   const onPrev = () => setPaginaActual((p) => Math.max(p - 1, 1));
   const onNext = () => setPaginaActual((p) => Math.min(p + 1, totalPaginas));
@@ -103,38 +75,14 @@ export default function ClientesPage() {
           estado={estado}
           setEstado={setEstado}
           child={
-            <>
-              <div className="flex items-center gap-3 ml-3">
-                <select
-                  value={exportScope}
-                  onChange={(e) => setExportScope(e.target.value as any)}
-                  className="h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
-                  title="Alcance del reporte"
-                >
-                  <option value="page">Página</option>
-                  <option value="filtrados">Filtrados</option>
-                  <option value="todos">Todos</option>
-                </select>
-
-                <Button
-                  size="md"
-                  variant="outline"
-                  startIcon={<FileIcon />}
-                  onClick={handleDownloadReport}
-                  disabled={isDownloading}
-                >
-                  {isDownloading ? "Generando..." : "Descargar Reporte"}
-                </Button>
-              </div>
-              <Button
-          size="md"
-          variant="primary"
-          onClick={openModal}
-              >
-          <FaPlus className="size-3" />
-          Nuevo Cliente
-              </Button>
-            </>
+            <Button
+              size="md"
+              variant="primary"
+              onClick={openModal}
+            >
+              <FaPlus className="size-3" />
+              Nuevo Cliente
+            </Button>
           }
         />
 

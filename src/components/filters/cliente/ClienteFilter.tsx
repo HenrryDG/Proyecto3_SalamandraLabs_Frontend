@@ -11,7 +11,7 @@ type Props = {
 
 export default function ClienteFilter({ filtro, setFiltro, estado, setEstado, child }: Props) {
        return (
-        <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-start md:items-center justify-between mb-5">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-start md:items-center md:justify-between mb-5">
             <BusquedaFilter filtro={filtro} onChange={setFiltro} />
             <EstadoFilter estado={estado} onChange={setEstado} />
             {child}

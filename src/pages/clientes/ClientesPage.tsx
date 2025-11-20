@@ -59,13 +59,23 @@ export default function ClientesPage() {
 
   // Estado para descarga
   const [isDownloading, setIsDownloading] = useState(false);
+  // Alcance de la exportación: 'page' | 'filtrados' | 'todos'
+  const [exportScope, setExportScope] = useState<"page" | "filtrados" | "todos">("filtrados");
 
   // Llamar al util para generar y descargar el reporte con los clientes filtrados
   const handleDownloadReport = async () => {
-    if (!clientesFiltrados || clientesFiltrados.length === 0) return;
+    // Determinar datos según el alcance seleccionado
+    const dataToExport = exportScope === "page"
+      ? clientesPaginados
+      : exportScope === "filtrados"
+        ? clientesFiltrados
+        : clientes ?? [];
+
+    if (!dataToExport || dataToExport.length === 0) return;
+
     try {
       setIsDownloading(true);
-      await exportClientesToExcel(clientesFiltrados);
+      await exportClientesToExcel(dataToExport);
     } catch (err) {
       console.error("Error generando reporte Excel:", err);
     } finally {
@@ -94,16 +104,28 @@ export default function ClientesPage() {
           setEstado={setEstado}
           child={
             <>
-              <Button
-                size="md"
-                variant="outline"
-                startIcon={<FileIcon />}
-                onClick={handleDownloadReport}
-                className="ml-3"
-                disabled={isDownloading}
-              >
-                {isDownloading ? "Generando..." : "Descargar Reporte"}
-              </Button>
+              <div className="flex items-center gap-3 ml-3">
+                <select
+                  value={exportScope}
+                  onChange={(e) => setExportScope(e.target.value as any)}
+                  className="h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
+                  title="Alcance del reporte"
+                >
+                  <option value="page">Página</option>
+                  <option value="filtrados">Filtrados</option>
+                  <option value="todos">Todos</option>
+                </select>
+
+                <Button
+                  size="md"
+                  variant="outline"
+                  startIcon={<FileIcon />}
+                  onClick={handleDownloadReport}
+                  disabled={isDownloading}
+                >
+                  {isDownloading ? "Generando..." : "Descargar Reporte"}
+                </Button>
+              </div>
               <Button
           size="md"
           variant="primary"

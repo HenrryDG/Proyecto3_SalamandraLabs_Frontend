@@ -6,6 +6,7 @@ import { Pagination } from "../../components/tables/Pagination";
 import { useClientes } from "../../hooks/cliente/useClientes";
 import ClienteFilter from "../../components/filters/cliente/ClienteFilter";
 import Button from "../../components/ui/button/Button";
+import { FileIcon } from "../../icons";
 import { FaPlus } from "react-icons/fa";
 import CreateClienteModal from "../../components/modals/cliente/CreateClienteModal";
 import { useModal } from "../../hooks/useModal";
@@ -75,14 +76,28 @@ export default function ClientesPage() {
           estado={estado}
           setEstado={setEstado}
           child={
-            <Button
-              size="md"
-              variant="primary"
-              onClick={openModal}
-            >
-              <FaPlus className="size-3" />
-              Nuevo Cliente
-            </Button>
+            <>
+              <Button
+          size="md"
+          variant="outline"
+          startIcon={<FileIcon />}
+          onClick={() => {
+            // TODO: implementar generación/descarga de reporte
+            console.log("Generar reporte de clientes");
+          }}
+          className="ml-3"
+              >
+          Descargar Reporte
+              </Button>              
+              <Button
+          size="md"
+          variant="primary"
+          onClick={openModal}
+              >
+          <FaPlus className="size-3" />
+          Nuevo Cliente
+              </Button>
+            </>
           }
         />
 

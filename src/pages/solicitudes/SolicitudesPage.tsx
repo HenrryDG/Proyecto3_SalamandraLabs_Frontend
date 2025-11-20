@@ -113,37 +113,36 @@ export default function SolicitudesPage() {
       <div className="rounded-2xl border border-gray-200 bg-white px-5 py-7 dark:border-gray-800 dark:bg-white/[0.03] xl:px-10 xl:py-12 space-y-10">
 
         {/* === Filtros === */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
-          <SolicitudFilter
-            filtro={filtro}
-            setFiltro={setFiltro}
-            rango={rangoFechas}
-            setRango={setRangoFechas}
-            estado={estado}
-            setEstado={setEstado}
-          />
+        <SolicitudFilter
+          filtro={filtro}
+          setFiltro={setFiltro}
+          rango={rangoFechas}
+          setRango={setRangoFechas}
+          estado={estado}
+          setEstado={setEstado}
+          child={
+            <div className="flex items-center gap-3">
+              <Button
+                size="md"
+                variant="outline"
+                onClick={handleDownloadReport}
+                disabled={isDownloading}
+                title="Descargar reporte Excel"
+              >
+                <FaFileExcel className="size-5 text-green-550" />
+              </Button>
 
-          <div className="flex items-center gap-3 flex-shrink-0">
-            <Button
-              size="md"
-              variant="outline"
-              onClick={handleDownloadReport}
-              disabled={isDownloading}
-              title="Descargar reporte Excel"
-            >
-              <FaFileExcel className="size-5 text-green-600" />
-            </Button>
-
-            <Button
-              size="md"
-              variant="primary"
-              onClick={handleNuevaSolicitud}
-            >
-              <FaPlus className="size-3" />
-              Nueva Solicitud
-            </Button>
-          </div>
-        </div>
+              <Button
+                size="md"
+                variant="primary"
+                onClick={handleNuevaSolicitud}
+              >
+                <FaPlus className="size-3" />
+                Nueva Solicitud
+              </Button>
+            </div>
+          }
+        />
 
         <div className="max-w-full space-y-6">
           {loading ? (

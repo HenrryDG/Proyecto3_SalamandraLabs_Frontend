@@ -101,17 +101,14 @@ export default function SolicitudesPage() {
       <div className="rounded-2xl border border-gray-200 bg-white px-5 py-7 dark:border-gray-800 dark:bg-white/[0.03] xl:px-10 xl:py-12 space-y-10">
 
         {/* === Filtros === */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
-          <PrestamoFilter
-            filtro={filtro}
-            setFiltro={setFiltro}
-            rango={rangoFechas}
-            setRango={setRangoFechas}
-            estado={estado}
-            setEstado={setEstado}
-          />
-
-          <div className="flex items-center gap-3 flex-shrink-0">
+        <PrestamoFilter
+          filtro={filtro}
+          setFiltro={setFiltro}
+          rango={rangoFechas}
+          setRango={setRangoFechas}
+          estado={estado}
+          setEstado={setEstado}
+          child={
             <Button
               size="md"
               variant="outline"
@@ -119,10 +116,10 @@ export default function SolicitudesPage() {
               disabled={isDownloading}
               title="Descargar reporte Excel"
             >
-              <FaFileExcel className="size-5 text-green-600" />
+                <FaFileExcel className="size-5 text-green-550" />
             </Button>
-          </div>
-        </div>
+          }
+        />
 
         <div className="max-w-full space-y-6">
           {loading ? (

@@ -6,6 +6,7 @@ import { Pagination } from "../../components/tables/Pagination";
 import { useClientes } from "../../hooks/cliente/useClientes";
 import ClienteFilter from "../../components/filters/cliente/ClienteFilter";
 import Button from "../../components/ui/button/Button";
+import exportClientesToExcel from "../../utils/exportClientes";
 import { FileIcon } from "../../icons";
 import { FaPlus } from "react-icons/fa";
 import CreateClienteModal from "../../components/modals/cliente/CreateClienteModal";
@@ -56,6 +57,22 @@ export default function ClientesPage() {
     setPaginaActual(1);
   }, [filtro, estado]);
 
+  // Estado para descarga
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  // Llamar al util para generar y descargar el reporte con los clientes filtrados
+  const handleDownloadReport = async () => {
+    if (!clientesFiltrados || clientesFiltrados.length === 0) return;
+    try {
+      setIsDownloading(true);
+      await exportClientesToExcel(clientesFiltrados);
+    } catch (err) {
+      console.error("Error generando reporte Excel:", err);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   // Cambios de página
   const onPrev = () => setPaginaActual((p) => Math.max(p - 1, 1));
   const onNext = () => setPaginaActual((p) => Math.min(p + 1, totalPaginas));
@@ -78,17 +95,15 @@ export default function ClientesPage() {
           child={
             <>
               <Button
-          size="md"
-          variant="outline"
-          startIcon={<FileIcon />}
-          onClick={() => {
-            // TODO: implementar generación/descarga de reporte
-            console.log("Generar reporte de clientes");
-          }}
-          className="ml-3"
+                size="md"
+                variant="outline"
+                startIcon={<FileIcon />}
+                onClick={handleDownloadReport}
+                className="ml-3"
+                disabled={isDownloading}
               >
-          Descargar Reporte
-              </Button>              
+                {isDownloading ? "Generando..." : "Descargar Reporte"}
+              </Button>
               <Button
           size="md"
           variant="primary"

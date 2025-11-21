@@ -13,7 +13,7 @@ import PlanPagosModal from "../../components/modals/planPago/PlanPagosModal";
 
 
 export default function SolicitudesPage() {
-  const { prestamos, loading, error } = usePrestamos();
+  const { prestamos, loading, error, refetch } = usePrestamos();
   const [searchParams, setSearchParams] = useSearchParams();
 
 
@@ -36,6 +36,7 @@ export default function SolicitudesPage() {
 
   const handleClosePlanPagos = () => {
     setSearchParams({});
+    refetch();
   };
 
   // Filtrar solicitudes por texto y estado
@@ -149,6 +150,7 @@ export default function SolicitudesPage() {
         onClose={handleClosePlanPagos}
         prestamoId={prestamoIdParam ? parseInt(prestamoIdParam) : null}
         clienteNombre={clienteNombreParam || ""}
+        onPagoExitoso={refetch}
       />
     </div>
   );

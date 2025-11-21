@@ -12,6 +12,7 @@ type Props = {
     onClose: () => void;
     prestamoId: number | null;
     clienteNombre?: string;
+    onPagoExitoso?: () => void;
 };
 
 export default function PlanPagosModal({
@@ -19,6 +20,7 @@ export default function PlanPagosModal({
     onClose,
     prestamoId,
     clienteNombre,
+    onPagoExitoso,
 }: Props) {
     const { planPagos, loading, error, refetch } = usePlanPagos(prestamoId);
     const { pagarCuota, loading: pagando, error: errorPago } = usePagarCuota();
@@ -41,6 +43,9 @@ export default function PlanPagosModal({
             setIsPagoModalOpen(false);
             setSelectedPlanPago(null);
             await refetch();
+            if (onPagoExitoso) {
+                onPagoExitoso();
+            }
         } else {
             toast.error(errorPago || "Error al procesar el pago");
         }

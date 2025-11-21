@@ -6,6 +6,7 @@ import { usePlanPagos } from "../../../hooks/planPago/usePlanPagos";
 import { usePagarCuota } from "../../../hooks/planPago/usePagarCuota";
 import { PlanPago, MetodoPago } from "../../../types/planPago";
 import { toast } from "sonner";
+import { useNotificacionesContext } from "../../../context/NotificacionesContext";
 
 type Props = {
     isOpen: boolean;
@@ -24,6 +25,7 @@ export default function PlanPagosModal({
 }: Props) {
     const { planPagos, loading, error, refetch } = usePlanPagos(prestamoId);
     const { pagarCuota, loading: pagando, error: errorPago } = usePagarCuota();
+    const { refetch: refetchNotificaciones } = useNotificacionesContext();
     
     const [selectedPlanPago, setSelectedPlanPago] = useState<PlanPago | null>(null);
     const [isPagoModalOpen, setIsPagoModalOpen] = useState(false);
@@ -43,6 +45,8 @@ export default function PlanPagosModal({
             setIsPagoModalOpen(false);
             setSelectedPlanPago(null);
             await refetch();
+            // Actualizar notificaciones después del pago
+            await refetchNotificaciones(false);
             if (onPagoExitoso) {
                 onPagoExitoso();
             }

@@ -2,11 +2,12 @@ import { useState } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { Link, useNavigate } from "react-router";
-import { useNotificaciones } from "../../hooks/planPago/useNotificaciones";
+import { useNotificacionesContext } from "../../context/NotificacionesContext";
+import { IoNotificationsOffOutline } from "react-icons/io5";
 
 export default function NotificationDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-  const { notificaciones, loading, hasNewNotifications, markAsRead } = useNotificaciones();
+  const { notificaciones, loading, hasNewNotifications, markAsRead } = useNotificacionesContext();
   const navigate = useNavigate();
 
   function toggleDropdown() {
@@ -58,7 +59,12 @@ export default function NotificationDropdown() {
       <Dropdown
         isOpen={isOpen}
         onClose={closeDropdown}
-        className="absolute -right-[240px] mt-[17px] flex h-[480px] w-[350px] flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark sm:w-[361px] lg:right-0"
+        className={`absolute -right-[240px] mt-[17px] flex w-[350px] flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark sm:w-[361px] lg:right-0 ${
+          notificaciones.length === 0 ? 'h-auto' : 
+          notificaciones.length === 1 ? 'h-[240px]' : 
+          notificaciones.length === 2 ? 'h-[360px]' : 
+          'h-[480px]'
+        }`}
       >
         <div className="flex items-center justify-between pb-3 mb-3 border-b border-gray-100 dark:border-gray-700">
           <h5 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
@@ -90,7 +96,8 @@ export default function NotificationDropdown() {
               <span className="text-gray-500 dark:text-gray-400">Cargando notificaciones...</span>
             </li>
           ) : notificaciones.length === 0 ? (
-            <li className="flex items-center justify-center p-8">
+            <li className="flex flex-col items-center justify-center p-8 space-y-3">
+              <IoNotificationsOffOutline className="w-12 h-12 text-gray-400 dark:text-gray-500" />
               <span className="text-gray-500 dark:text-gray-400">No hay notificaciones pendientes</span>
             </li>
           ) : (

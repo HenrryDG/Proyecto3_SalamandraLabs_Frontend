@@ -22,6 +22,7 @@ import Home from "./pages/Dashboard/Home";
 import ProtectedRoute from "./components/routes/ProtectedRoute";
 import RoleProtectedRoute from "./components/routes/RoleProtectedRoute";
 import { Toaster } from "sonner";
+import { NotificacionesProvider } from "./context/NotificacionesContext";
 
 import EmpleadosPage from "./pages/empleados/EmpleadosPage";
 import ClientesPage from "./pages/clientes/ClientesPage";
@@ -33,8 +34,9 @@ export default function App() {
   return (
     <>
       <Toaster toastOptions={{ duration: 3000 }} position="top-left" theme="light" visibleToasts={1} richColors closeButton />
-      <Router>
-        <ScrollToTop />
+      <NotificacionesProvider>
+        <Router>
+          <ScrollToTop />
         <Routes>
 
           {/* Dashboard Layout */}
@@ -95,7 +97,8 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
           <Route path="/error-403" element={<Forbidden />} />
         </Routes>
-      </Router>
+        </Router>
+      </NotificacionesProvider>
     </>
   );
 }

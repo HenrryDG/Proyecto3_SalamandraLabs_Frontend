@@ -8,7 +8,7 @@ import { Pagination } from "../../components/tables/Pagination";
 import { usePrestamos } from "../../hooks/prestamo/usePrestamos";
 import exportPrestamosToExcel from "../../utils/exportPrestamos";
 import Button from "../../components/ui/button/Button";
-import { FileIcon } from "../../icons";
+import { FaFileExcel } from "react-icons/fa";
 import PlanPagosModal from "../../components/modals/planPago/PlanPagosModal";
 
 
@@ -73,14 +73,10 @@ export default function SolicitudesPage() {
 
   // Estado para descarga
   const [isDownloading, setIsDownloading] = useState(false);
-  const [exportScope, setExportScope] = useState<"page" | "filtrados" | "todos">("filtrados");
 
   const handleDownloadReport = async () => {
-    const dataToExport = exportScope === "page"
-      ? prestamosPaginados
-      : exportScope === "filtrados"
-        ? prestamosFiltrados
-        : prestamos ?? [];
+    // Usar siempre los datos filtrados
+    const dataToExport = prestamosFiltrados;
 
     if (!dataToExport || dataToExport.length === 0) return;
 
@@ -105,39 +101,25 @@ export default function SolicitudesPage() {
       <div className="rounded-2xl border border-gray-200 bg-white px-5 py-7 dark:border-gray-800 dark:bg-white/[0.03] xl:px-10 xl:py-12 space-y-10">
 
         {/* === Filtros === */}
-        <div className="flex items-center justify-between gap-4 mb-4">
-          <PrestamoFilter
-            filtro={filtro}
-            setFiltro={setFiltro}
-            rango={rangoFechas}
-            setRango={setRangoFechas}
-            estado={estado}
-            setEstado={setEstado}
-          />
-
-          <div className="flex items-center gap-3">
-            <select
-              value={exportScope}
-              onChange={(e) => setExportScope(e.target.value as any)}
-              className="h-10 rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
-              title="Alcance del reporte"
-            >
-              <option value="page">Página</option>
-              <option value="filtrados">Filtrados</option>
-              <option value="todos">Todos</option>
-            </select>
-
+        <PrestamoFilter
+          filtro={filtro}
+          setFiltro={setFiltro}
+          rango={rangoFechas}
+          setRango={setRangoFechas}
+          estado={estado}
+          setEstado={setEstado}
+          child={
             <Button
               size="md"
               variant="outline"
-              startIcon={<FileIcon />}
               onClick={handleDownloadReport}
               disabled={isDownloading}
+              title="Descargar reporte Excel"
             >
-              {isDownloading ? "Generando..." : "Descargar Reporte"}
+                <FaFileExcel className="size-5 text-green-550" />
             </Button>
-          </div>
-        </div>
+          }
+        />
 
         <div className="max-w-full space-y-6">
           {loading ? (

@@ -35,9 +35,8 @@ export default function NotificationDropdown() {
         onClick={handleClick}
       >
         <span
-          className={`absolute right-0 top-0.5 z-10 h-2 w-2 rounded-full bg-cyan-400 ${
-            !hasNewNotifications || notificaciones.length === 0 ? "hidden" : "flex"
-          }`}
+          className={`absolute right-0 top-0.5 z-10 h-2 w-2 rounded-full bg-cyan-400 ${!hasNewNotifications || notificaciones.length === 0 ? "hidden" : "flex"
+            }`}
         >
           <span className="absolute inline-flex w-full h-full bg-cyan-400 rounded-full opacity-75 animate-ping"></span>
         </span>
@@ -131,7 +130,7 @@ export default function NotificationDropdown() {
                       <h6 className="mb-1 text-sm font-semibold text-gray-800 dark:text-white/90">
                         {notificacion.nombre_cliente}
                       </h6>
-                      
+
                       {/* Cuerpo: Mensaje formateado desde el backend */}
                       <p className="mb-2 text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
                         {notificacion.mensaje}

@@ -17,7 +17,7 @@ type Props = {
     onPagar: (planPago: PlanPago) => void;
 }
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 3;
 
 export default function PlanPagoTable({ planPagos, onPagar }: Props) {
     const [paginaActual, setPaginaActual] = useState(1);
@@ -135,17 +135,19 @@ export default function PlanPagoTable({ planPagos, onPagar }: Props) {
                                                 {planPago.estado}
                                             </Badge>
                                         </TableCell>
-                                        <TableCell className="px-4 py-3">
-                                            {planPago.estado !== 'Pagada' && (
-                                                <Button
-                                                    variant="outline"
-                                                    size="sm"
-                                                    startIcon={<MdPayment className="size-4" />}
-                                                    onClick={() => onPagar(planPago)}
-                                                >
-                                                    Pagar
-                                                </Button>
-                                            )}
+                                        <TableCell className="px-4 py-3 min-h-[52px]">
+                                            <div className="min-h-[44px] flex items-center">
+                                                {planPago.estado !== 'Pagada' && (
+                                                    <Button
+                                                        variant="outline"
+                                                        size="sm"
+                                                        startIcon={<MdPayment className="size-4" />}
+                                                        onClick={() => onPagar(planPago)}
+                                                    >
+                                                        Pagar
+                                                    </Button>
+                                                )}
+                                            </div>
                                         </TableCell>
                                     </TableRow>
                                 );

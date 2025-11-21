@@ -94,13 +94,13 @@ export default function PlanPagosModal({
                     <div className="hidden sm:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 gap-4">
                         <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
                             <p className="text-sm text-gray-600 dark:text-gray-400">Total de Cuotas</p>
-                            <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                            <p className="text-2xl font-bold text-blue-500 dark:text-blue-400">
                                 {planPagos.length}
                             </p>
                         </div>
-                        <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
+                        <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-lg p-4">
                             <p className="text-sm text-gray-600 dark:text-gray-400">Cuotas Pagadas</p>
-                            <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                            <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-500">
                                 {totales.cuotasPagadas}
                             </p>
                         </div>
@@ -112,7 +112,7 @@ export default function PlanPagosModal({
                         </div>
                         <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-lg p-4">
                             <p className="text-sm text-gray-600 dark:text-gray-400">Total Pagado</p>
-                            <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+                            <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-500">
                                 Bs. {totales.pagado.toFixed(2)}
                             </p>
                         </div>

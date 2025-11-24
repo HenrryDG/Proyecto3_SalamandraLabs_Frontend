@@ -14,6 +14,26 @@ export default function CalculadoraPage() {
     const [ingreso, setIngreso] = useState("");
     const [resultado, setResultado] = useState<ResultadoCalculo | null>(null);
 
+    // Evita ingresar números y caracteres especiales en el nombre del cliente
+    const handleClienteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const raw = e.target.value;
+        const filtered = raw.replace(/[^^\p{L}\s'-]/gu, "");
+        setCliente(filtered);
+    };
+
+    // Evita ingresos <= 0
+    const handleIngresoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let value = e.target.value;
+
+        // Evita signos negativos
+        if (value.startsWith("-")) return;
+
+        // Evita ceros al inicio
+        if (value === "0" || value === "0.") return;
+
+        setIngreso(value);
+    };
+
     const handleCalcular = () => {
         const ingresoNum = parseFloat(ingreso);
         if (!ingresoNum || ingresoNum <= 0 || !cliente.trim()) {
@@ -22,17 +42,23 @@ export default function CalculadoraPage() {
         }
         setResultado(calcularMontoMaximo(ingresoNum, cliente));
     };
+
     const formatMoney = (value: number) =>
         value.toLocaleString("es-BO", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
         });
 
-
     const handleGenerarPDF = () => {
         if (!resultado) return;
         generarPDF(resultado, parseFloat(ingreso));
     };
+
+    // 🔥 Botón deshabilitado si no se cumplen los requisitos
+    const botonDeshabilitado =
+        !cliente.trim() ||
+        !ingreso ||
+        parseFloat(ingreso) <= 0;
 
     return (
         <div>
@@ -53,7 +79,7 @@ export default function CalculadoraPage() {
                         <Input
                             type="text"
                             value={cliente}
-                            onChange={(e) => setCliente(e.target.value)}
+                            onChange={handleClienteChange}
                             placeholder="Nombre del cliente"
                             className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-400 focus:border-transparent dark:bg-gray-700 dark:text-white"
                         />
@@ -63,8 +89,9 @@ export default function CalculadoraPage() {
                         <Input
                             type="number"
                             value={ingreso}
-                            onChange={(e) => setIngreso(e.target.value)}
+                            onChange={handleIngresoChange}
                             placeholder="Ingreso mensual (Bs)"
+                            min="1"
                             className="w-full rounded-xl border border-gray-300 px-4 py-3 focus:ring-2 focus:ring-blue-400 focus:border-transparent dark:bg-gray-700 dark:text-white"
                         />
                     </div>
@@ -72,6 +99,7 @@ export default function CalculadoraPage() {
                     <Button
                         variant="primary"
                         onClick={handleCalcular}
+                        disabled={botonDeshabilitado}
                         className="w-full"
                     >
                         Calcular

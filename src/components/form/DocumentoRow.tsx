@@ -22,16 +22,38 @@ export default function DocumentoRow({
 
   const esFacturaGeneral = tipo.toLowerCase().includes("factura de agua / luz / gas");
 
+  // 🔥 Función para devolver mensaje personalizado según el tipo
+  const getMensajeError = () => {
+    const tipoLower = tipo.toLowerCase();
+
+    if (tipoLower.includes("carnet")) {
+      return "No se pudo verificar el número de carnet";
+    }
+    
+
+    if (tipoLower.includes("factura")) {
+      return "No se pudo verificar la dirección";
+    }
+
+    if (tipoLower.includes("boleta")) {
+      return "No se pudo verificar el ingreso mensual";
+    }
+
+    // Mensaje genérico por si aparece otro tipo de documento
+    return "Los datos no coinciden, por favor vuelva a subir el archivo";
+  };
+
   return (
     <li className="flex items-center justify-between py-3 hover:bg-gray-50 dark:hover:bg-gray-800 px-2 rounded-lg transition">
       <div>
         <p className="text-sm font-medium text-gray-800 dark:text-white">{tipo}</p>
+
         {verificado !== undefined && (
           <p className="text-xs text-gray-500 dark:text-gray-400">
             {verificado ? (
               <span className="text-green-600">Los datos coinciden</span>
             ) : (
-              <span className="text-red-500">Los datos no coinciden, por favor vuelva a subir el archivo</span>
+              <span className="text-red-500">{getMensajeError()}</span>
             )}
           </p>
         )}
@@ -62,7 +84,9 @@ export default function DocumentoRow({
             />
           </label>
 
-          {archivo && <span className="text-sm text-gray-700 dark:text-gray-300">Imagen cargada</span>}
+          {archivo && (
+            <span className="text-sm text-gray-700 dark:text-gray-300">Imagen cargada</span>
+          )}
 
           <Button
             variant="primary"

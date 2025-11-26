@@ -9,6 +9,7 @@ export const roles: rol[] = [
 ]
 
 export const estados: rol[] = [
+    { value: "Todos", label: "Todos" },
     { value: "true", label: "Activo" },
     { value: "false", label: "Inactivo" },
 ]

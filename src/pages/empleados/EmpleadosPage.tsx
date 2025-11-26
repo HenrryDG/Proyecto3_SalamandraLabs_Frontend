@@ -27,7 +27,7 @@ export default function EmpleadosPage() {
 
   // ---------- Filtro de texto y estado ----------
   const [filtro, setFiltro] = useState("");
-  const [estado, setEstado] = useState("true");
+  const [estado, setEstado] = useState("Todos");
 
   // ------------- Paginación ------------
   const [paginaActual, setPaginaActual] = useState(1);

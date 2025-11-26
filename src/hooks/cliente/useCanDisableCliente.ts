@@ -60,12 +60,10 @@ export const useCanDisableCliente = (clienteId: number | null) => {
           return;
         }
 
-        // Si llegamos aquí, el cliente puede ser deshabilitado
+        // El cliente puede ser deshabilitado
         setCanDisable(true);
         setReason(null);
       } catch (error) {
-        // En caso de error, permitimos la acción (fail-open)
-        // pero podrías cambiarlo a fail-closed si prefieres
         console.error("Error al verificar si el cliente puede ser deshabilitado:", error);
         setCanDisable(true);
         setReason(null);

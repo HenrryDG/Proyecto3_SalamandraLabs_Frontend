@@ -115,9 +115,31 @@ export default function EditClienteModal({ isOpen, onClose, cliente, onUpdated }
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-[700px] m-4">
       <div className="relative w-full p-4 overflow-y-auto bg-white no-scrollbar rounded-3xl dark:bg-gray-900 lg:p-11">
-        <h2 className="text-2xl font-bold text-gray-800 dark:text-white/90 mb-6">
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-white/90 mb-2">
           Editar Cliente
         </h2>
+
+        {/* Información de fechas*/}
+        <div className="mb-6 text-sm text-gray-500 dark:text-gray-400 space-y-1">
+          <p>
+            <span className="font-medium">Creado:</span>{" "}
+            {cliente?.created_at
+              ? new Date(cliente.created_at).toLocaleString("es-BO", {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                })
+              : "-"}
+          </p>
+          <p>
+            <span className="font-medium">Actualizado:</span>{" "}
+            {cliente?.updated_at
+              ? new Date(cliente.updated_at).toLocaleString("es-BO", {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                })
+              : "-"}
+          </p>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {camposEdit.map(c => (
@@ -143,20 +165,17 @@ export default function EditClienteModal({ isOpen, onClose, cliente, onUpdated }
         </div>
 
         <div className="flex justify-end gap-3 pt-4">
-          {/* Mostrar botón solo si: cliente inactivo (habilitar) O cliente activo Y puede ser deshabilitado */}
-          {(!cliente?.activo || (cliente?.activo && canDisable && !loadingCanDisable)) && (
-            <Button
-              onClick={async () => {
-                if (!cliente) return;
-                await toggle(cliente.id);
-                onClose();
-                onUpdated?.();
-              }}
-              disabled={isToggling}
-            >
-              {isToggling ? "Procesando..." : cliente?.activo ? "Deshabilitar" : "Habilitar"}
-            </Button>
-          )}
+          <Button
+            onClick={async () => {
+              if (!cliente) return;
+              await toggle(cliente.id);
+              onClose();
+              onUpdated?.();
+            }}
+            disabled={isToggling || loadingCanDisable || (cliente?.activo && !canDisable)}
+          >
+            {isToggling || loadingCanDisable ? "Procesando..." : cliente?.activo ? "Deshabilitar" : "Habilitar"}
+          </Button>
 
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
           <Button

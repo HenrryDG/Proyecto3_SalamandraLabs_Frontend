@@ -5,6 +5,7 @@ import Button from "../../ui/button/Button";
 import { Cliente } from "../../../types/cliente";
 import { useUpdateCliente } from "../../../hooks/cliente/useUpdateCliente";
 import { useToggleCliente } from "../../../hooks/cliente/useToggleCliente";
+import { useCanDisableCliente } from "../../../hooks/cliente/useCanDisableCliente";
 import ConfirmacionModal from "../confirmacionModal";
 
 // Configuración de campos reutilizable
@@ -26,6 +27,7 @@ interface Props {
 export default function EditClienteModal({ isOpen, onClose, cliente, onUpdated }: Props) {
   const { update, isUpdating } = useUpdateCliente();
   const { toggle, isToggling } = useToggleCliente();
+  const { canDisable, loading: loadingCanDisable } = useCanDisableCliente(cliente?.id ?? null);
 
   const initialForm = Object.fromEntries(camposEdit.map(c => [c.key, ""])) as Record<EditFormKeys, string>;
   const [form, setForm] = useState(initialForm);
@@ -141,17 +143,20 @@ export default function EditClienteModal({ isOpen, onClose, cliente, onUpdated }
         </div>
 
         <div className="flex justify-end gap-3 pt-4">
-          <Button
-            onClick={async () => {
-              if (!cliente) return;
-              await toggle(cliente.id);
-              onClose();
-              onUpdated?.();
-            }}
-            disabled={isToggling}
-          >
-            {isToggling ? "Procesando..." : cliente?.activo ? "Deshabilitar" : "Habilitar"}
-          </Button>
+          {/* Mostrar botón solo si: cliente inactivo (habilitar) O cliente activo Y puede ser deshabilitado */}
+          {(!cliente?.activo || (cliente?.activo && canDisable && !loadingCanDisable)) && (
+            <Button
+              onClick={async () => {
+                if (!cliente) return;
+                await toggle(cliente.id);
+                onClose();
+                onUpdated?.();
+              }}
+              disabled={isToggling}
+            >
+              {isToggling ? "Procesando..." : cliente?.activo ? "Deshabilitar" : "Habilitar"}
+            </Button>
+          )}
 
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
           <Button

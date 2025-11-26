@@ -204,14 +204,38 @@ export default function EditSolicitudModal({ isOpen, onClose, solicitud, onUpdat
     // Determinar si la solicitud está rechazada
     const isRechazada = solicitud?.estado === "Rechazada";
     const isAprobada = solicitud?.estado === "Aprobada";
+    const isPendiente = solicitud?.estado === "Pendiente";
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} className="max-w-[700px] m-4">
             <div className="relative w-full p-4 overflow-y-auto bg-white no-scrollbar rounded-3xl dark:bg-gray-900 lg:p-11">
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white/90 mb-6">
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-white/90 mb-5">
                     {isRechazada ? "Solicitud Rechazada" : isAprobada ? "Solicitud Aprobada" : "Editar Solicitud de Préstamo"}
-
                 </h2>
+
+                {/* Información de fechas (solo visualización) */}
+                <div className="mb-6 text-sm text-gray-500 dark:text-gray-400 grid grid-cols-2 gap-4">
+                    <p>
+                        <span className="font-medium">Creación:</span>{" "}
+                        {solicitud?.created_at
+                            ? new Date(solicitud.created_at).toLocaleString("es-BO", {
+                                dateStyle: "medium",
+                                timeStyle: "short",
+                            })
+                            : "-"}
+                    </p>
+                    {!isPendiente && (
+                        <p>
+                            <span className="font-medium">Resolución:</span>{" "}
+                            {solicitud?.updated_at
+                                ? new Date(solicitud.updated_at).toLocaleString("es-BO", {
+                                    dateStyle: "medium",
+                                    timeStyle: "short",
+                                })
+                                : "-"}
+                        </p>
+                    )}
+                </div>
 
                 {/* Formulario de edición */}
                 {/* Cliente | Ingreso Mensual */}
@@ -240,8 +264,8 @@ export default function EditSolicitudModal({ isOpen, onClose, solicitud, onUpdat
                     </div>
                 </div>
 
-                {/* Monto Solicitado | Monto Aprobado */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                {/* Monto Solicitado | Monto Aprobado (solo para aprobadas) */}
+                <div className={`grid grid-cols-1 ${isAprobada ? 'sm:grid-cols-2' : ''} gap-4 mb-4`}>
                     <div className="space-y-1">
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                             Monto Solicitado
@@ -253,18 +277,48 @@ export default function EditSolicitudModal({ isOpen, onClose, solicitud, onUpdat
                             className="h-11 w-full rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 cursor-not-allowed"
                         />
                     </div>
-                    <div className="space-y-1">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Monto Aprobado
-                        </label>
-                        <input
-                            type="text"
-                            value={solicitud?.monto_aprobado ? formatCurrency(solicitud.monto_aprobado) : "N/A"}
-                            disabled
-                            className="h-11 w-full rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 cursor-not-allowed"
-                        />
-                    </div>
+                    {isAprobada && (
+                        <div className="space-y-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                Monto Aprobado
+                            </label>
+                            <input
+                                type="text"
+                                value={solicitud?.monto_aprobado ? formatCurrency(solicitud.monto_aprobado) : "N/A"}
+                                disabled
+                                className="h-11 w-full rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 cursor-not-allowed"
+                            />
+                        </div>
+                    )}
                 </div>
+
+                {/* Plazo Meses | Fecha Plazo (solo para aprobadas) */}
+                {isAprobada && (
+                    <div className="flex flex-col sm:flex-row gap-4 mb-4">
+                        <div className="flex-1 space-y-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                Plazo Meses
+                            </label>
+                            <input
+                                type="text"
+                                value={solicitud?.plazo_meses || "N/A"}
+                                disabled
+                                className="h-11 w-full rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 cursor-not-allowed"
+                            />
+                        </div>
+                        <div className="flex-1 space-y-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                Fecha de Plazo
+                            </label>
+                            <input
+                                type="text"
+                                value={solicitud?.fecha_plazo || "N/A"}
+                                disabled
+                                className="h-11 w-full rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 cursor-not-allowed"
+                            />
+                        </div>
+                    </div>
+                )}
 
                 {/* Proposito */}
                 <div className="grid grid-cols-1 sm:grid-cols-1 gap-4 mb-4">
@@ -290,61 +344,10 @@ export default function EditSolicitudModal({ isOpen, onClose, solicitud, onUpdat
                     </div>
                 </div>
 
-                {/* Fecha de Solicitud | Fecha de Aprobación */}
-                <div className="flex flex-col sm:flex-row gap-4 mb-4">
-                    <div className="flex-1 space-y-1">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Plazo Meses
-                        </label>
-                        <input
-                            type="text"
-                            value={solicitud?.plazo_meses || "N/A"}
-                            disabled
-                            className="h-11 w-full rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 cursor-not-allowed"
-                        />
-                    </div>
-                    <div className="flex-1 space-y-1">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Fecha de Solicitud
-                        </label>
-                        <input
-                            type="text"
-                            value={solicitud?.fecha_solicitud || ""}
-                            disabled
-                            className="h-11 w-full rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 cursor-not-allowed"
-                        />
-                    </div>
-                    <div className="flex-1 space-y-1">
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Fecha de Plazo
-                        </label>
-                        <input
-                            type="text"
-                            value={solicitud?.fecha_plazo || "N/A"}
-                            disabled
-                            className="h-11 w-full rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 cursor-not-allowed"
-                        />
-                    </div>
-                    {(isAprobada || isRechazada) && (
-                        <div className="flex-1 space-y-1">
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                Fecha de Resolución
-                            </label>
-                            <input
-                                type="text"
-                                value={solicitud?.fecha_aprobacion || "Sin resolver"}
-                                disabled
-                                className="h-11 w-full rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 cursor-not-allowed"
-                            />
-                        </div>
-                    )}
-
-                </div>
-
                 {/* Observaciones */}
                 <div className="mb-4">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Observaciones (Opcional)
+                        Observaciones
                     </label>
                     <TextArea
                         value={form.observaciones}
@@ -364,9 +367,9 @@ export default function EditSolicitudModal({ isOpen, onClose, solicitud, onUpdat
                 </div>
 
                 {/* Acciones */}
-                <div className="flex flex-col sm:flex-row sm:justify-end gap-3 pt-4">
+                <div className="flex flex-col sm:flex-row sm:justify-end gap-3 pt-3">
                     {solicitud?.estado === "Pendiente" && (
-                        <div className="grid grid-cols-2 gap-2 w-full sm:flex sm:flex-row sm:w-auto">
+                        <div className="grid grid-cols-2 gap-3 w-full sm:flex sm:flex-row sm:w-auto">
                             <div className="w-full sm:w-auto">
                                 <Button
                                     variant="outline"
@@ -406,12 +409,7 @@ export default function EditSolicitudModal({ isOpen, onClose, solicitud, onUpdat
                     )}
 
                     <div className="grid grid-cols-2 gap-2 w-full sm:flex sm:flex-row sm:w-auto">
-                        <div className="w-full sm:w-auto">
-                            <Button variant="outline" onClick={onClose} className="w-full">
-                                {isRechazada ? "Cerrar" : isAprobada ? "Cerrar" : "Cancelar"}
-                            </Button>
-                        </div>
-                        {!isRechazada && !isAprobada && (
+                        {isPendiente && (
                             <div className="w-full sm:w-auto">
                                 <Button
                                     variant="primary"

@@ -43,7 +43,7 @@ export default function PrestamoTable({ prestamos, onOpenPlanPagos }: Props) {
                                     {prestamo.monto_aprobado}
                                 </TableCell>
                                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                                    {prestamo.fecha_desembolso}
+                                    {prestamo.fecha_desembolso ? new Date(prestamo.fecha_desembolso).toLocaleDateString("es-BO") : "-"}
                                 </TableCell>
                                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                                     {prestamo.interes}%
@@ -52,7 +52,7 @@ export default function PrestamoTable({ prestamos, onOpenPlanPagos }: Props) {
                                     {prestamo.plazo_meses}
                                 </TableCell>
                                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                                    {prestamo.fecha_plazo}
+                                    {prestamo.fecha_plazo ? new Date(prestamo.fecha_plazo).toLocaleDateString("es-BO") : "-"}
                                 </TableCell>
                                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                                     <Badge

@@ -76,16 +76,13 @@ export default function PlanPagoTable({ planPagos, onPagar }: Props) {
                                     Total (Bs.)
                                 </TableCell>
                                 <TableCell isHeader className="px-5 py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400">
-                                    Fecha Pago
+                                    Estado
                                 </TableCell>
                                 <TableCell isHeader className="px-5 py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400">
                                     Método Pago
                                 </TableCell>
                                 <TableCell isHeader className="px-5 py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400">
-                                    Estado
-                                </TableCell>
-                                <TableCell isHeader className="px-5 py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400">
-                                    Acciones
+                                    Fecha Pago
                                 </TableCell>
                             </TableRow>
                         </TableHeader>
@@ -119,15 +116,6 @@ export default function PlanPagoTable({ planPagos, onPagar }: Props) {
                                             {total.toFixed(2)}
                                         </TableCell>
                                         <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                                            {planPago.fecha_pago 
-                                                ? new Date(planPago.fecha_pago).toLocaleDateString('es-ES')
-                                                : '-'
-                                            }
-                                        </TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                                            {planPago.metodo_pago || '-'}
-                                        </TableCell>
-                                        <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                                             <Badge
                                                 size="sm"
                                                 color={getEstadoBadgeColor(planPago.estado)}
@@ -135,9 +123,18 @@ export default function PlanPagoTable({ planPagos, onPagar }: Props) {
                                                 {planPago.estado}
                                             </Badge>
                                         </TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                                            {planPago.metodo_pago || '-'}
+                                        </TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                                            {planPago.fecha_pago 
+                                                ? new Date(planPago.fecha_pago).toLocaleDateString('es-ES')
+                                                : '-'
+                                            }
+                                        </TableCell>
                                         <TableCell className="px-4 py-3 min-h-[52px]">
                                             <div className="min-h-[44px] flex items-center">
-                                                {planPago.estado !== 'Pagada' && (
+                                                {planPago.estado !== 'Pagada' ? (
                                                     <Button
                                                         variant="outline"
                                                         size="sm"
@@ -146,6 +143,16 @@ export default function PlanPagoTable({ planPagos, onPagar }: Props) {
                                                     >
                                                         Pagar
                                                     </Button>
+                                                ) : (
+                                                    <span className="text-gray-500 text-theme-sm dark:text-gray-400">
+                                                        {planPago.updated_at
+                                                            ? new Date(planPago.updated_at).toLocaleTimeString('es-BO', {
+                                                                hour: '2-digit',
+                                                                minute: '2-digit'
+                                                            })
+                                                            : '-'
+                                                        }
+                                                    </span>
                                                 )}
                                             </div>
                                         </TableCell>

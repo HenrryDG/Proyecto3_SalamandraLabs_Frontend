@@ -51,9 +51,8 @@ export default function SolicitudTable({ solicitudes, onEdit, onView }: Props) {
                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                   {solicitud.cliente_nombre}
                 </TableCell>
-                
                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                  {solicitud.fecha_solicitud ? solicitud.fecha_solicitud : "-"}
+                  {solicitud.fecha_solicitud ? new Date(solicitud.fecha_solicitud).toLocaleDateString("es-BO") : "-"}
                 </TableCell>
                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                   {solicitud.empleado_nombre}

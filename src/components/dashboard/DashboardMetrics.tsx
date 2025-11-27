@@ -1,6 +1,7 @@
 import { GroupIcon } from "../../icons";
-import { FaMoneyBillWave, FaFileInvoiceDollar, FaExclamationTriangle } from "react-icons/fa";
+import { FaMoneyBillWave, FaUserTie, FaClipboardList } from "react-icons/fa";
 import { DashboardResumen } from "../../types/dashboard";
+import Badge from "../ui/badge/Badge";
 
 interface Props {
   resumen: DashboardResumen | null;
@@ -8,16 +9,9 @@ interface Props {
 }
 
 export default function DashboardMetrics({ resumen, loading }: Props) {
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("es-BO", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value);
-  };
-
   if (loading) {
     return (
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 md:gap-6">
+      <>
         {[1, 2, 3, 4].map((i) => (
           <div
             key={i}
@@ -30,7 +24,7 @@ export default function DashboardMetrics({ resumen, loading }: Props) {
             </div>
           </div>
         ))}
-      </div>
+      </>
     );
   }
 
@@ -38,38 +32,39 @@ export default function DashboardMetrics({ resumen, loading }: Props) {
     {
       title: "Clientes Activos",
       value: resumen?.clientes.activos ?? 0,
-      subtitle: `${resumen?.clientes.total ?? 0} total`,
-      icon: <GroupIcon className="text-blue-600 size-6" />,
-      bgColor: "bg-blue-100 dark:bg-blue-900/30",
+      badgeValue: `${resumen?.clientes.total ?? 0} total`,
+      icon: <GroupIcon className="text-brand-500 size-6" />,
+      bgColor: "bg-brand-50 dark:bg-brand-500/15",
+      badgeColor: "primary" as const,
+    },
+    {
+      title: "Empleados Activos",
+      value: resumen?.empleados.activos ?? 0,
+      badgeValue: `${resumen?.empleados.total ?? 0} total`,
+      icon: <FaUserTie className="text-blue-light-500 size-6" />,
+      bgColor: "bg-blue-light-50 dark:bg-blue-light-500/15",
+      badgeColor: "info" as const,
     },
     {
       title: "Préstamos en Curso",
       value: resumen?.prestamos.en_curso ?? 0,
-      subtitle: `${resumen?.prestamos.en_mora ?? 0} en mora`,
-      icon: <FaMoneyBillWave className="text-green-600 size-6" />,
-      bgColor: "bg-green-100 dark:bg-green-900/30",
-      highlight: (resumen?.prestamos.en_mora ?? 0) > 0,
+      badgeValue: `${resumen?.prestamos.en_mora ?? 0} en mora`,
+      icon: <FaMoneyBillWave className="text-success-500 size-6" />,
+      bgColor: "bg-success-50 dark:bg-success-500/15",
+      badgeColor: (resumen?.prestamos.en_mora ?? 0) > 0 ? "error" as const : "success" as const,
     },
     {
-      title: "Total Recaudado",
-      value: `Bs. ${formatCurrency(resumen?.pagos.total_recaudado ?? 0)}`,
-      subtitle: `${resumen?.pagos.tasa_cumplimiento ?? 0}% cumplimiento`,
-      icon: <FaFileInvoiceDollar className="text-emerald-600 size-6" />,
-      bgColor: "bg-emerald-100 dark:bg-emerald-900/30",
-      isAmount: true,
-    },
-    {
-      title: "Cuotas Pendientes",
-      value: resumen?.pagos.cuotas_pendientes ?? 0,
-      subtitle: `${resumen?.pagos.cuotas_vencidas ?? 0} vencidas`,
-      icon: <FaExclamationTriangle className="text-amber-600 size-6" />,
-      bgColor: "bg-amber-100 dark:bg-amber-900/30",
-      highlight: (resumen?.pagos.cuotas_vencidas ?? 0) > 0,
+      title: "Solicitudes Pendientes",
+      value: resumen?.solicitudes.pendientes ?? 0,
+      badgeValue: `${resumen?.solicitudes.total ?? 0} total`,
+      icon: <FaClipboardList className="text-warning-500 size-6" />,
+      bgColor: "bg-warning-50 dark:bg-warning-500/15",
+      badgeColor: "warning" as const,
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 md:gap-6">
+    <>
       {metrics.map((metric, index) => (
         <div
           key={index}
@@ -81,25 +76,21 @@ export default function DashboardMetrics({ resumen, loading }: Props) {
             {metric.icon}
           </div>
 
-          <div className="mt-5">
-            <span className="text-sm text-gray-500 dark:text-gray-400">
-              {metric.title}
-            </span>
-            <h4 className="mt-1 font-bold text-gray-800 text-title-sm dark:text-white/90">
-              {metric.isAmount ? metric.value : metric.value.toLocaleString()}
-            </h4>
-            <span
-              className={`text-xs ${
-                metric.highlight
-                  ? "text-red-500 dark:text-red-400"
-                  : "text-gray-400 dark:text-gray-500"
-              }`}
-            >
-              {metric.subtitle}
-            </span>
+          <div className="flex items-end justify-between mt-5">
+            <div>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                {metric.title}
+              </span>
+              <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
+                {metric.value.toLocaleString()}
+              </h4>
+            </div>
+            <Badge color={metric.badgeColor}>
+              {metric.badgeValue}
+            </Badge>
           </div>
         </div>
       ))}
-    </div>
+    </>
   );
 }

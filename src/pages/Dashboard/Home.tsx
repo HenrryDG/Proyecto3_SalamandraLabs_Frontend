@@ -14,31 +14,43 @@ export default function Home() {
     <>
       <PageMeta title="Dashboard" description="Panel de control principal" />
 
-      <div className="space-y-6">
+      <div className="grid grid-cols-12 gap-4 md:gap-6">
         {/* Error state */}
         {error && (
-          <div className="rounded-2xl border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
+          <div className="col-span-12 rounded-2xl border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
             <p className="text-red-600 dark:text-red-400">{error}</p>
           </div>
         )}
 
-        {/* Métricas principales */}
-        <DashboardMetrics resumen={resumen} loading={loading} />
+        {/* Columna izquierda: 4 métricas en grid 2x2 */}
+        <div className="col-span-12 xl:col-span-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+            <DashboardMetrics resumen={resumen} loading={loading} />
+          </div>
+        </div>
 
-        {/* Fila: Resumen financiero + Estado de cuotas */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <ResumenFinanciero resumen={resumen} loading={loading} />
+        {/* Columna derecha: Estado de Cuotas */}
+        <div className="col-span-12 xl:col-span-6">
           <CuotasResumen resumen={resumen} loading={loading} />
         </div>
 
-        {/* Fila: Gráficos de solicitudes y préstamos */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Gráficos de solicitudes y préstamos */}
+        <div className="col-span-12 xl:col-span-6">
           <SolicitudesChart resumen={resumen} loading={loading} />
+        </div>
+        <div className="col-span-12 xl:col-span-6">
           <PrestamosChart resumen={resumen} loading={loading} />
         </div>
 
         {/* Gráfico de tendencias */}
-        <TendenciasChart />
+        <div className="col-span-12">
+          <TendenciasChart />
+        </div>
+
+        {/* Resumen financiero */}
+        <div className="col-span-12">
+          <ResumenFinanciero resumen={resumen} loading={loading} />
+        </div>
       </div>
     </>
   );

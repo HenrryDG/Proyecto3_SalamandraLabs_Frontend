@@ -34,26 +34,26 @@ export default function ResumenFinanciero({ resumen, loading }: Props) {
     {
       label: "Total Desembolsado",
       value: resumen?.prestamos.monto_desembolsado ?? 0,
-      icon: <FaHandHoldingUsd className="text-blue-500 size-5" />,
-      color: "text-blue-600 dark:text-blue-400",
+      icon: <FaHandHoldingUsd className="text-brand-500 size-5" />,
+      color: "text-brand-500 dark:text-brand-400",
     },
     {
       label: "Por Cobrar",
       value: resumen?.prestamos.monto_restante ?? 0,
-      icon: <FaWallet className="text-amber-500 size-5" />,
-      color: "text-amber-600 dark:text-amber-400",
+      icon: <FaWallet className="text-warning-500 size-5" />,
+      color: "text-warning-600 dark:text-orange-400",
     },
     {
       label: "Total Recaudado",
       value: resumen?.pagos.total_recaudado ?? 0,
-      icon: <FaChartLine className="text-green-500 size-5" />,
-      color: "text-green-600 dark:text-green-400",
+      icon: <FaChartLine className="text-success-500 size-5" />,
+      color: "text-success-600 dark:text-success-500",
     },
     {
       label: "Mora Acumulada",
       value: resumen?.pagos.mora_acumulada ?? 0,
-      icon: <FaChartLine className="text-red-500 size-5" />,
-      color: "text-red-600 dark:text-red-400",
+      icon: <FaChartLine className="text-error-500 size-5" />,
+      color: "text-error-600 dark:text-error-500",
     },
   ];
 

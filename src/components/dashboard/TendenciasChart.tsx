@@ -2,12 +2,15 @@ import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { useState } from "react";
 import { useDashboardTendencias } from "../../hooks/dashboard/useDashboardTendencias";
+import { useTheme } from "../../context/ThemeContext";
 
 type Periodo = "7d" | "30d" | "90d" | "365d";
 
 export default function TendenciasChart() {
-  const [periodo, setPeriodo] = useState<Periodo>("30d");
+  const [periodo, setPeriodo] = useState<Periodo>("7d");
   const { tendencias, loading } = useDashboardTendencias(periodo);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   const periodos: { value: Periodo; label: string }[] = [
     { value: "7d", label: "7 días" },
@@ -35,6 +38,7 @@ export default function TendenciasChart() {
       type: "area",
       fontFamily: "Outfit, sans-serif",
       height: 300,
+      background: "transparent",
       toolbar: {
         show: false,
       },
@@ -69,7 +73,7 @@ export default function TendenciasChart() {
       },
       labels: {
         style: {
-          colors: "#6B7280",
+          colors: isDark ? "#9CA3AF" : "#6B7280",
           fontSize: "12px",
         },
       },
@@ -77,22 +81,26 @@ export default function TendenciasChart() {
     yaxis: {
       labels: {
         style: {
-          colors: "#6B7280",
+          colors: isDark ? "#9CA3AF" : "#6B7280",
           fontSize: "12px",
         },
         formatter: (val) => `Bs. ${val.toLocaleString()}`,
       },
     },
     grid: {
-      borderColor: "#E5E7EB",
+      borderColor: isDark ? "#374151" : "#E5E7EB",
       strokeDashArray: 4,
     },
     legend: {
       position: "top",
       horizontalAlign: "right",
       fontFamily: "Outfit, sans-serif",
+      labels: {
+        colors: isDark ? "#9CA3AF" : "#374151",
+      },
     },
     tooltip: {
+      theme: isDark ? "dark" : "light",
       y: {
         formatter: (val) => `Bs. ${val.toLocaleString("es-BO", { minimumFractionDigits: 2 })}`,
       },
@@ -124,7 +132,7 @@ export default function TendenciasChart() {
               onClick={() => setPeriodo(p.value)}
               className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
                 periodo === p.value
-                  ? "bg-blue-600 text-white"
+                  ? "bg-sky-500 text-white"
                   : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
               }`}
             >

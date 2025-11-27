@@ -1,6 +1,7 @@
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { DashboardResumen } from "../../types/dashboard";
+import { useTheme } from "../../context/ThemeContext";
 
 interface Props {
   resumen: DashboardResumen | null;
@@ -8,6 +9,9 @@ interface Props {
 }
 
 export default function PrestamosChart({ resumen, loading }: Props) {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
   if (loading) {
     return (
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6 animate-pulse">
@@ -28,16 +32,23 @@ export default function PrestamosChart({ resumen, loading }: Props) {
     chart: {
       type: "donut",
       fontFamily: "Outfit, sans-serif",
+      background: "transparent",
     },
     labels: ["En Curso", "Completados", "En Mora"],
-    colors: ["#3B82F6", "#10B981", "#EF4444"],
+    colors: ["#0ba5ec", "#12b76a", "#f04438"], // info, success, error
     legend: {
       position: "bottom",
       fontFamily: "Outfit, sans-serif",
+      labels: {
+        colors: isDark ? "#9CA3AF" : "#374151",
+      },
     },
     dataLabels: {
       enabled: true,
       formatter: (val: number) => `${val.toFixed(0)}%`,
+      style: {
+        colors: ["#FFFFFF"],
+      },
     },
     plotOptions: {
       pie: {
@@ -48,21 +59,30 @@ export default function PrestamosChart({ resumen, loading }: Props) {
             name: {
               show: true,
               fontSize: "14px",
+              color: isDark ? "#9CA3AF" : "#374151",
             },
             value: {
               show: true,
               fontSize: "20px",
               fontWeight: 600,
+              color: isDark ? "#E5E7EB" : "#1F2937",
             },
             total: {
               show: true,
               label: "Total",
               fontSize: "14px",
+              color: isDark ? "#9CA3AF" : "#374151",
               formatter: () => `${prestamos?.total ?? 0}`,
             },
           },
         },
       },
+    },
+    stroke: {
+      colors: isDark ? ["#1F2937"] : ["#FFFFFF"],
+    },
+    tooltip: {
+      theme: isDark ? "dark" : "light",
     },
     responsive: [
       {
@@ -86,34 +106,13 @@ export default function PrestamosChart({ resumen, loading }: Props) {
           Estado de Préstamos
         </h3>
         {(prestamos?.tasa_mora ?? 0) > 0 && (
-          <span className="text-sm text-red-600 dark:text-red-400 font-medium">
+          <span className="text-sm text-error-600 dark:text-error-500 font-medium">
             {prestamos?.tasa_mora ?? 0}% mora
           </span>
         )}
       </div>
 
       <Chart options={options} series={series} type="donut" height={250} />
-
-      <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-gray-100 dark:border-gray-800">
-        <div className="text-center">
-          <p className="text-xs text-gray-500 dark:text-gray-400">En Curso</p>
-          <p className="text-lg font-semibold text-blue-600 dark:text-blue-400">
-            {prestamos?.en_curso ?? 0}
-          </p>
-        </div>
-        <div className="text-center">
-          <p className="text-xs text-gray-500 dark:text-gray-400">Completados</p>
-          <p className="text-lg font-semibold text-green-600 dark:text-green-400">
-            {prestamos?.completados ?? 0}
-          </p>
-        </div>
-        <div className="text-center">
-          <p className="text-xs text-gray-500 dark:text-gray-400">En Mora</p>
-          <p className="text-lg font-semibold text-red-600 dark:text-red-400">
-            {prestamos?.en_mora ?? 0}
-          </p>
-        </div>
-      </div>
     </div>
   );
 }

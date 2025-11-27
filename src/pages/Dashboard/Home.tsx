@@ -1,51 +1,55 @@
-import EcommerceMetrics from "../../components/ecommerce/EcommerceMetrics";
-import MonthlySalesChart from "../../components/ecommerce/MonthlySalesChart";
-import StatisticsChart from "../../components/ecommerce/StatisticsChart";
-import MonthlyTarget from "../../components/ecommerce/MonthlyTarget";
-import RecentOrders from "../../components/ecommerce/RecentOrders";
-import DemographicCard from "../../components/ecommerce/DemographicCard";
 import PageMeta from "../../components/common/PageMeta";
+import DashboardMetrics from "../../components/dashboard/DashboardMetrics";
+import ResumenFinanciero from "../../components/dashboard/ResumenFinanciero";
+import SolicitudesChart from "../../components/dashboard/SolicitudesChart";
+import PrestamosChart from "../../components/dashboard/PrestamosChart";
+import TendenciasChart from "../../components/dashboard/TendenciasChart";
+import CuotasResumen from "../../components/dashboard/CuotasResumen";
+import { useDashboardResumen } from "../../hooks/dashboard/useDashboardResumen";
 
 export default function Home() {
+  const { resumen, loading, error } = useDashboardResumen();
+
   return (
     <>
-      <PageMeta
-        title="Inicio"
-        description="Página de inicio"
-      />
+      <PageMeta title="Dashboard" description="Panel de control principal" />
+
       <div className="grid grid-cols-12 gap-4 md:gap-6">
-        <div className="col-span-12 space-y-6 xl:col-span-7">
-          {/* Métricas generales */}
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">Métricas</h3>
-          <EcommerceMetrics />
+        {/* Error state */}
+        {error && (
+          <div className="col-span-12 rounded-2xl border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
+            <p className="text-red-600 dark:text-red-400">{error}</p>
+          </div>
+        )}
 
-          {/* Ventas mensuales */}
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">Ventas mensuales</h3>
-          <MonthlySalesChart />
+        {/* Columna izquierda: 4 métricas en grid 2x2 */}
+        <div className="col-span-12 xl:col-span-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+            <DashboardMetrics resumen={resumen} loading={loading} />
+          </div>
         </div>
 
-        <div className="col-span-12 xl:col-span-5">
-          {/* Objetivo mensual */}
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">Objetivo mensual</h3>
-          <MonthlyTarget />
+        {/* Columna derecha: Estado de Cuotas */}
+        <div className="col-span-12 xl:col-span-6">
+          <CuotasResumen resumen={resumen} loading={loading} />
         </div>
 
+        {/* Gráficos de solicitudes y préstamos */}
+        <div className="col-span-12 xl:col-span-6">
+          <SolicitudesChart resumen={resumen} loading={loading} />
+        </div>
+        <div className="col-span-12 xl:col-span-6">
+          <PrestamosChart resumen={resumen} loading={loading} />
+        </div>
+
+        {/* Gráfico de tendencias */}
         <div className="col-span-12">
-          {/* Gráfica de estadísticas */}
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">Estadísticas</h3>
-          <StatisticsChart />
+          <TendenciasChart />
         </div>
 
-        <div className="col-span-12 xl:col-span-5">
-          {/* Tarjeta demográfica */}
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">Demografía</h3>
-          <DemographicCard />
-        </div>
-
-        <div className="col-span-12 xl:col-span-7">
-          {/* Órdenes recientes */}
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">Órdenes recientes</h3>
-          <RecentOrders />
+        {/* Resumen financiero */}
+        <div className="col-span-12">
+          <ResumenFinanciero resumen={resumen} loading={loading} />
         </div>
       </div>
     </>

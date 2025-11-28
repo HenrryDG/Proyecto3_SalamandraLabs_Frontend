@@ -24,12 +24,21 @@ export const useAuth = () => {
             navigate("/", { replace: true });
             toast.success("Inicio de sesión exitoso");
         } catch (error: any) {
-            if (error.response?.status === 401 || error.response?.status === 400) {
-                toast.error("Credenciales Incorrectas.");
-            } else {
-                toast.error("Ocurrió un error inesperado, intenta más tarde.");
+            const mensajeBackend = error.response?.data?.mensaje;
+
+            if (error.response.status === 401){
+                toast.error("Credenciales Incorrectas");
+                return;
             }
+
+            if (mensajeBackend) {
+                toast.error(mensajeBackend);
+                return;
+            }
+
+            toast.error("Ocurrió un error inesperado, intenta más tarde.");
         }
+
     }
 
     return { loginUser };

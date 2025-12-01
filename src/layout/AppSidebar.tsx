@@ -16,6 +16,7 @@ import {
   UserCircleIcon,
   GroupIcon,
 } from "../icons";
+import { AiOutlineAudit } from "react-icons/ai";
 import { useSidebar } from "../context/SidebarContext";
 
 type NavItem = {
@@ -61,6 +62,11 @@ const AppSidebar: React.FC = () => {
           name: "Empleados",
           path: "/empleados",
         },
+        {
+          icon: <AiOutlineAudit />,
+          name: "Auditoria",
+          path: "/auditoria",
+        }
       ]
       : []),
   ];

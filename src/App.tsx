@@ -29,7 +29,7 @@ import ClientesPage from "./pages/clientes/ClientesPage";
 import PrestamosPage from "./pages/prestamos/PrestamosPage";
 import SolicitudesPage from "./pages/solicitudes/SolicitudesPage";
 import CalculadoraPage from "./pages/calculadora/CalculadoraPage";
-import AuditoriaPage from "./pages/auditorias/Blank";
+import AuditoriaPage from "./pages/auditorias/AuditoriaPage";
 
 export default function App() {
   return (

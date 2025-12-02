@@ -114,10 +114,11 @@ export default function AuditoriaTable({ auditorias, loading, error, searchTerm,
                 {auditoria.tabla}
               </td>
               <td className="px-6 py-4 text-sm text-gray-900 dark:text-white max-w-xs">
-                <div className="truncate" title={auditoria.descripcion}>
+                <div className="max-h-16 overflow-y-auto">
                   {auditoria.descripcion}
                 </div>
               </td>
+
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                 <div>
                   <div>{formatDate(auditoria.fecha)}</div>

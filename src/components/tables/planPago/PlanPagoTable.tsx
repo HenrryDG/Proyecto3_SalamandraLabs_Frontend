@@ -19,6 +19,18 @@ type Props = {
 
 const ITEMS_PER_PAGE = 3;
 
+// Obtener la cuota más reciente pendiente
+const obtenerCuotaMasRecientePendiente = (planPagos: PlanPago[]): PlanPago | null => {
+    // Filtrar solo las cuotas pendientes o vencidas 
+    const cuotasPendientes = planPagos.filter(plan => plan.estado !== 'Pagada');
+    
+    // Si no hay cuotas pendientes, retornar null
+    if (cuotasPendientes.length === 0) return null;
+    
+    // Retornar la primera cuota pendiente/vencida
+    return cuotasPendientes[0];
+};
+
 export default function PlanPagoTable({ planPagos, onPagar }: Props) {
     const [paginaActual, setPaginaActual] = useState(1);
 
@@ -37,6 +49,12 @@ export default function PlanPagoTable({ planPagos, onPagar }: Props) {
             default:
                 return 'warning';
         }
+    };
+
+    // Obtener la cuota más reciente pendiente 
+    const cuotaMasRecientePendiente = obtenerCuotaMasRecientePendiente(planPagos);
+    const puedeHabilitarPago = (planPago: PlanPago): boolean => {
+        return cuotaMasRecientePendiente?.id === planPago.id;
     };
 
     // Cálculos de paginación
@@ -140,6 +158,8 @@ export default function PlanPagoTable({ planPagos, onPagar }: Props) {
                                                         size="sm"
                                                         startIcon={<MdPayment className="size-4" />}
                                                         onClick={() => onPagar(planPago)}
+                                                        disabled={!puedeHabilitarPago(planPago)}
+                                                        title={!puedeHabilitarPago(planPago) ? 'Debe pagar la cuota anterior primero' : ''}
                                                     >
                                                         Pagar
                                                     </Button>
